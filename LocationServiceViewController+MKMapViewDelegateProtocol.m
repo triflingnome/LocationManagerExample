@@ -19,13 +19,14 @@
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
     if ([overlay isKindOfClass:[MKPolyline class]]) {
         MKPolyline *route = overlay;
+        
         MKPolylineRenderer *routeRenderer = [[MKPolylineRenderer alloc]initWithPolyline:route];
         routeRenderer.strokeColor = [UIColor yellowColor];
         routeRenderer.lineWidth = 5;
+        
         return routeRenderer;
     } else return nil;
     
-    //return self.routeLineRenderer;
-}
+}// end mapView: rendererForOverlay:
 
 @end

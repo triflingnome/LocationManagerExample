@@ -16,23 +16,11 @@
     
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
         NSLog(@"Location updated in foreground");
-        // mapView.showAnnotations(locations, animated: true)
         [self updateRouteLineFromLocationArray];// draw route on map only if app is in foreground
     } else {
         NSLog(@"Location updated in background");
     }// end if-else
     
-
-    
-    // code to calculate distance traveled in foreground
-    /*if (self.lastLocation == nil) {
-        self.lastLocation = [locations lastObject];
-    }
-    
-    self.distanceTraveledInMeters += [self.lastLocation distanceFromLocation:[locations lastObject]];
-    
-    self.lastLocation = [locations lastObject];
-    [self updateDistanceTraveledLabel:self.distanceTraveledLabel];*/
-}
+}// end locationManager: didUpdateLocations:
 
 @end

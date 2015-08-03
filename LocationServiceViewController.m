@@ -11,8 +11,6 @@
 
 @interface LocationServiceViewController () {
     BOOL trackingOn;
-    int secondsElapsed;
-    int minutesElapsed;
 }
 
 @end
@@ -24,14 +22,11 @@
     
     // initialize variables
     trackingOn = NO;
-    secondsElapsed = 0;
-    minutesElapsed = 0;
-    self.distanceTraveledInMeters = 0.0;
     self.locationArray = [[NSMutableArray alloc] init];
     
     // configure mapView
     self.mapView.showsUserLocation = YES;
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(self.mapView.userLocation.coordinate, 1000, 1000);
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(self.mapView.userLocation.coordinate, 750, 750);
     [self.mapView setRegion:region animated:YES];
     
     // initialize and configure location manager
@@ -42,12 +37,6 @@
     if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
         [self.locationManager requestAlwaysAuthorization];
     }// end if
-    
-    // create timer to method to execute every second to show time elapsed
-    /*[NSTimer scheduledTimerWithTimeInterval: 1.0 target: self
-                                                selector: @selector(updateElapsedTimeLabel:)
-                                                userInfo: nil
-                                                repeats: YES];*/
     
 }// end viewDidLoad:
 
@@ -74,15 +63,6 @@
     
 }// end startStopButtonAction:
 
-- (IBAction)clearRecordedStatsButtonAction:(id)sender {
-    secondsElapsed = minutesElapsed = 0;
-    self.timeElapsedLabel.text = @"0 m 0 s";
-    
-    self.lastLocation = nil;
-    self.distanceTraveledInMeters = 0.0;
-    self.distanceTraveledLabel.text = @"0.00 mi";
-}
-
 // changes button to reflect stop location tracking state
 - (void)changeButtonToStopAppearance:(UIButton *)button {
     button.backgroundColor = [UIColor redColor];
@@ -96,28 +76,6 @@
     [button setTitle:@"Start" forState:UIControlStateNormal];
     [button setTitle:@"Start" forState:UIControlStateSelected];
 }// end changeButtonToStartAppearance:
-
-- (void)updateDistanceTraveledLabel:(UILabel *)label {
-    double distanceTraveledInMiles = self.distanceTraveledInMeters * 0.00062137f;
-    
-    NSString *distanceString = [NSString stringWithFormat:@"%.2f mi", distanceTraveledInMiles];
-    label.text = distanceString;
-}
-
-- (void)updateElapsedTimeLabel:(id)sender {
-    
-    if (trackingOn == YES) {
-        secondsElapsed++;
-        
-        if (secondsElapsed % 60 == 0 && secondsElapsed != 0) {
-            secondsElapsed = 0;
-            minutesElapsed++;
-        }// end if
-    
-        self.timeElapsedLabel.text = [NSString stringWithFormat:@"%i m %i s", minutesElapsed, secondsElapsed];
-    }// end if
-    
-}// end updateElapsedTimeLabel:
 
 // public method to add a CLLocation to the mutable array locationArray, with some memory management code
 // to ensure it doesn't get too big
@@ -145,8 +103,7 @@
     
     MKPolyline *newRouteLine = [MKPolyline polylineWithCoordinates:coordinates count:[self.locationArray count]];
     self.routeLine = newRouteLine;
-    [self.mapView addOverlay:self.routeLine];
-    
+    [self.mapView addOverlay:self.routeLine];// when self.routeLine is added to self.mapView, mapView: rendererForOverlay delegate method is called
 }// end updateRouteLineFromLocationArray
 
 @end
