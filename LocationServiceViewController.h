@@ -15,7 +15,8 @@
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) double distanceTraveledInMeters;
 @property (nonatomic) CLLocation *lastLocation;
-@property (nonatomic) NSMutableArray *locationArray;
+@property (nonatomic) NSMutableArray *locationArray;// holds CLLocationCoordinate2D objects for use in routeLine
+@property MKPolyline *routeLine;
 
 @property IBOutlet UILabel *distanceTraveledLabel;
 @property IBOutlet UIButton *startStopButton;
@@ -24,8 +25,8 @@
 @property IBOutlet MKMapView *mapView;
 
 - (void)updateDistanceTraveledLabel:(UILabel *)label;
-- (void)addLocationToLocationArray:(CLLocation *)newLocation;
-- (void)centerMapViewOnLocation:(CLLocation *)location;
+- (void)addLocationToLocationArray:(CLLocation *)location;
+- (void)updateRouteLineFromLocationArray;
 
 @end
 

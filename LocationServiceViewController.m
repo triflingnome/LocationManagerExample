@@ -121,20 +121,32 @@
 
 // public method to add a CLLocation to the mutable array locationArray, with some memory management code
 // to ensure it doesn't get too big
-- (void)addLocationToLocationArray:(CLLocation *)newLocation {
+- (void)addLocationToLocationArray:(CLLocation *)location {
     NSLog(@"current size of locationArray: %lu", (unsigned long)[self.locationArray count]);
     
     if ([self.locationArray count] < LOCATION_ARRAY_MAX_SIZE) {
-        [self.locationArray addObject:newLocation];// adds the newest location to the end of the array
+        [self.locationArray addObject:location];// adds the newest location to the end of the array
     } else {
         [self.locationArray removeObject:[self.locationArray firstObject]];// removes the first object (oldest stored location)
-        [self.locationArray addObject:newLocation];// adds the newest location to the end of the array
+        [self.locationArray addObject:location];// adds the newest location to the end of the array
     }// end if-else
     
 }// end addLocationToLocationArray:
 
-- (void)centerMapViewOnLocation:(CLLocation *)location {
+- (void)updateRouteLineFromLocationArray {
+    [self.mapView removeOverlay:self.routeLine];
     
-}
+    CLLocationCoordinate2D coordinates[[self.locationArray count]];
+    int i = 0;
+    for (CLLocation *currentLocation in self.locationArray) {
+        coordinates[i] = currentLocation.coordinate;
+        i++;
+    }// end for
+    
+    MKPolyline *newRouteLine = [MKPolyline polylineWithCoordinates:coordinates count:[self.locationArray count]];
+    self.routeLine = newRouteLine;
+    [self.mapView addOverlay:self.routeLine];
+    
+}// end updateRouteLineFromLocationArray
 
 @end
