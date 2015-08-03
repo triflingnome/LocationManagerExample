@@ -7,6 +7,7 @@
 //
 
 #import "LocationServiceViewController.h"
+#define LOCATION_ARRAY_MAX_SIZE 250
 
 @interface LocationServiceViewController () {
     BOOL trackingOn;
@@ -28,9 +29,14 @@
     self.distanceTraveledInMeters = 0.0;
     self.locationArray = [[NSMutableArray alloc] init];
     
+    // configure mapView
+    self.mapView.showsUserLocation = YES;
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(self.mapView.userLocation.coordinate, 1000, 1000);
+    [self.mapView setRegion:region animated:YES];
+    
     // initialize and configure location manager
     self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     self.locationManager.delegate = self;
     
     if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
@@ -38,10 +44,10 @@
     }// end if
     
     // create timer to method to execute every second to show time elapsed
-    [NSTimer scheduledTimerWithTimeInterval: 1.0 target: self
+    /*[NSTimer scheduledTimerWithTimeInterval: 1.0 target: self
                                                 selector: @selector(updateElapsedTimeLabel:)
                                                 userInfo: nil
-                                                repeats: YES];
+                                                repeats: YES];*/
     
 }// end viewDidLoad:
 
@@ -116,6 +122,18 @@
 // public method to add a CLLocation to the mutable array locationArray, with some memory management code
 // to ensure it doesn't get too big
 - (void)addLocationToLocationArray:(CLLocation *)newLocation {
+    NSLog(@"current size of locationArray: %lu", (unsigned long)[self.locationArray count]);
+    
+    if ([self.locationArray count] < LOCATION_ARRAY_MAX_SIZE) {
+        [self.locationArray addObject:newLocation];// adds the newest location to the end of the array
+    } else {
+        [self.locationArray removeObject:[self.locationArray firstObject]];// removes the first object (oldest stored location)
+        [self.locationArray addObject:newLocation];// adds the newest location to the end of the array
+    }// end if-else
+    
+}// end addLocationToLocationArray:
+
+- (void)centerMapViewOnLocation:(CLLocation *)location {
     
 }
 

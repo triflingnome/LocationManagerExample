@@ -12,7 +12,7 @@
 
 // this delegate method is called when the phone's location is updated.
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    
+    [self addLocationToLocationArray:[locations lastObject]];
     
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
         NSLog(@"Location updated in foreground");

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import <MapKit/MapKit.h>
 
-@interface LocationServiceViewController : UIViewController <CLLocationManagerDelegate>
+@interface LocationServiceViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate>
 
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) double distanceTraveledInMeters;
@@ -20,8 +21,11 @@
 @property IBOutlet UIButton *startStopButton;
 @property IBOutlet UILabel *timeElapsedLabel;
 @property IBOutlet UIButton *clearRecordedStatsButton;
+@property IBOutlet MKMapView *mapView;
 
 - (void)updateDistanceTraveledLabel:(UILabel *)label;
+- (void)addLocationToLocationArray:(CLLocation *)newLocation;
+- (void)centerMapViewOnLocation:(CLLocation *)location;
 
 @end
 
